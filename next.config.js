@@ -20,6 +20,11 @@ const nextConfig = {
         hostname: "images.unsplash.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "www.tip-berlin.de",
+        port: "",
+      },
     ],
   },
 };
