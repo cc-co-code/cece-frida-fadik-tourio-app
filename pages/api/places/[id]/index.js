@@ -1,6 +1,6 @@
 //import { db_comments } from "../../../../lib/db_comments";
 import dbConnect from "../../../../db/connect";
-import Place from "../../../../db/models/places";
+import Place from "../../../../db/models/Places";
 
 export default async function handler(request, response) {
   await dbConnect();
