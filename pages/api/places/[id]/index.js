@@ -4,14 +4,33 @@ import Place from "../../../../db/models/Places";
 
 export default async function handler(request, response) {
   await dbConnect();
+
+  const { id } = request.query;
+  if (!id) {
+    return;
+  }
+
   if (request.method === "GET") {
     const place = await Place.find();
+    const currentPlace = place.find((place) => place._id.toString() === id);
 
-    console.log(place);
+    if (!currentPlace) {
+      return response.status(404).json({ status: "Not found" });
+    }
+    return response.status(200).json({ place: currentPlace });
+  }
+  if (request.method === "PATCH") {
+    console.log("ok", request.body);
 
-    return response.status(200).json(place);
-  } else {
-    return response.status(405).json({ message: "Method not allowed" });
+    const copy = { ...request.body };
+    Object.keys(copy).forEach((key) => {
+      if (!copy[key]) delete copy[key];
+    });
+
+    console.log("emptiesRemoved", copy);
+
+    await Place.findByIdAndUpdate(id, copy);
+    response.status(200).json({ status: `Place ${id} updated!` });
   }
 }
 /* const { id } = request.query;

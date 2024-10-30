@@ -7,7 +7,7 @@ export default async function handler(request, response) {
   if (request.method === "GET") {
     const place = await Place.find();
 
-    console.log(place);
+    //console.log(place);
 
     return response.status(200).json(place);
   } else {
@@ -17,7 +17,7 @@ export default async function handler(request, response) {
   if (request.method === "POST") {
     try {
       const placeData = request.body;
-      console.log(placeData);
+      //console.log(placeData);
       await Place.create(placeData);
       response.status(201).json({ status: "Place created" });
     } catch (error) {
