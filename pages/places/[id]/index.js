@@ -6,6 +6,7 @@ import { StyledLink } from "../../../components/StyledLink.js";
 import { StyledButton } from "../../../components/StyledButton.js";
 import { StyledImage } from "../../../components/StyledImage.js";
 import Comments from "../../../components/Comments.js";
+import { useEffect } from "react";
 
 const ImageContainer = styled.div`
   position: relative;
@@ -32,15 +33,16 @@ const StyledLocationLink = styled(StyledLink)`
 export default function DetailsPage() {
   const router = useRouter();
   const { isReady } = router;
-  const { id } = router.query;
+  const { id = "" } = router.query;
 
   const {
     data: { place, comments } = {},
     isLoading,
     error,
+    mutate,
   } = useSWR(`/api/places/${id}`);
 
-  if (id === null) {
+  if (!id) {
     return null;
   }
 
@@ -56,6 +58,27 @@ export default function DetailsPage() {
     }
   }
 
+  async function handleCommentSubmit(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+
+    try {
+      const response = await fetch(`/api/places/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log("comment added");
+        mutate();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return (
     <>
       <Link href={"/"} passHref legacyBehavior>
@@ -87,7 +110,17 @@ export default function DetailsPage() {
           Delete
         </StyledButton>
       </ButtonContainer>
-      <Comments locationName={place.name} comments={comments} />
+      <Comments
+        locationName={place.name}
+        comments={comments}
+        onSubmit={handleCommentSubmit}
+      />
+      {place.comments.map(({ name, comment, _id }) => (
+        <div key={_id}>
+          <h1>{name}</h1>
+          <p>{comment}</p>
+        </div>
+      ))}
     </>
   );
 }
