@@ -17,7 +17,7 @@ export default function CreatePlacePage() {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
-    console.log(data);
+    // console.log(data);
 
     const response = await fetch("/api/places", {
       method: "POST",

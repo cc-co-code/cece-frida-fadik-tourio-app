@@ -10,12 +10,6 @@ export default async function handler(request, response) {
     return;
   }
 
-  if (request.method === "DELETE") {
-    console.log("HERE");
-    //await Place.findByIdAndDelete(id);
-    //response.status(200).json({ status: `Place ${id} successfully deleted.` });
-  }
-
   if (request.method === "GET") {
     const place = await Place.find();
     const currentPlace = place.find((place) => place._id.toString() === id);
@@ -27,17 +21,18 @@ export default async function handler(request, response) {
   }
 
   if (request.method === "PATCH") {
-    console.log("ok", request.body);
-
     const copy = { ...request.body };
     Object.keys(copy).forEach((key) => {
       if (!copy[key]) delete copy[key];
     });
 
-    console.log("emptiesRemoved", copy);
-
     await Place.findByIdAndUpdate(id, copy);
     response.status(200).json({ status: `Place ${id} updated!` });
+  }
+
+  if (request.method === "DELETE") {
+    await Place.findByIdAndDelete(id);
+    response.status(200).json({ status: `Place ${id} successfully deleted.` });
   }
 }
 /* const { id } = request.query;
