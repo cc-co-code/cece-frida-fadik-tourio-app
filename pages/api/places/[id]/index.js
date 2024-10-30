@@ -10,6 +10,12 @@ export default async function handler(request, response) {
     return;
   }
 
+  if (request.method === "DELETE") {
+    console.log("HERE");
+    //await Place.findByIdAndDelete(id);
+    //response.status(200).json({ status: `Place ${id} successfully deleted.` });
+  }
+
   if (request.method === "GET") {
     const place = await Place.find();
     const currentPlace = place.find((place) => place._id.toString() === id);
@@ -17,8 +23,9 @@ export default async function handler(request, response) {
     if (!currentPlace) {
       return response.status(404).json({ status: "Not found" });
     }
-    return response.status(200).json({ place: currentPlace });
+    response.status(200).json({ place: currentPlace });
   }
+
   if (request.method === "PATCH") {
     console.log("ok", request.body);
 
