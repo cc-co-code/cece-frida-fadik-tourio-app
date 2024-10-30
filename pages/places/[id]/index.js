@@ -33,11 +33,17 @@ export default function DetailsPage() {
   const router = useRouter();
   const { isReady } = router;
   const { id } = router.query;
+  console.log("id", id);
+
   const {
     data: { place, comments } = {},
     isLoading,
     error,
   } = useSWR(`/api/places/${id}`);
+
+  if (id === null) {
+    return null;
+  }
 
   if (!isReady || isLoading || error) return <h2>Loading...</h2>;
 
@@ -47,7 +53,7 @@ export default function DetailsPage() {
 
   return (
     <>
-      <Link href={'/'} passHref legacyBehavior>
+      <Link href={"/"} passHref legacyBehavior>
         <StyledLink justifySelf="start">back</StyledLink>
       </Link>
       <ImageContainer>
