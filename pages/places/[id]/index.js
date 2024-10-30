@@ -33,7 +33,6 @@ export default function DetailsPage() {
   const router = useRouter();
   const { isReady } = router;
   const { id } = router.query;
-  console.log("id", id);
 
   const {
     data: { place, comments } = {},
@@ -48,11 +47,13 @@ export default function DetailsPage() {
   if (!isReady || isLoading || error) return <h2>Loading...</h2>;
 
   async function deletePlace() {
-    await fetch(`api/places/${id}`, {
+    const response = await fetch(`/api/places/${id}`, {
       method: "DELETE",
     });
-    console.log("deleted?");
-    router.push("/");
+
+    if (response.ok) {
+      router.push("/");
+    }
   }
 
   return (
